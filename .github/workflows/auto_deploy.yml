@@ -1,0 +1,35 @@
+name: auto_deploy
+
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: ./composer/
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+#      - name: Install Dependencies
+#        run: |
+#          sudo apt-get install python3-pip
+#          pip3 install --upgrade pip
+#          pip3 install -r ./requirements.txt
+#      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@main
+#        with:
+#            version: '275.0.0'
+#            service_account_email: ${{ secrets.GCP_SA_EMAIL }}
+#            service_account_key: ${{ secrets.GCP_SA_KEY }}
+#      - uses: actions/checkout@v2
+#        with:
+#          path: ./composer/dev/
+#      - name: Deploy and Set Variables
+#        run: |
+#          make
