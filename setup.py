@@ -13,7 +13,7 @@ REQUIREMENTS: ---
       AUTHOR: Alex Leontiev (nailbiter@dtws-work.in)
 ORGANIZATION: Datawise Inc.
      VERSION: ---
-     CREATED: 2020-11-18T15:49:09.362113
+     CREATED: 2020-11-18T16:25:46.844524
     REVISION: ---
 
 ==============================================================================="""
@@ -32,7 +32,7 @@ def get_install_requires(fn="requirements.txt"):
 setup(
     name='alex_eel',
     version='1.0.1',
-    py_modules=[]
+    py_modules=[],
     packages=find_packages(
         include=["alex_eel"],
         # exclude=["bin"]
