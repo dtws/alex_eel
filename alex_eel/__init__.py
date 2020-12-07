@@ -18,7 +18,7 @@ ORGANIZATION: Datawise Inc.
 
 ==============================================================================="""
 
-from graphviz import Digraph
+import graphviz
 from uuid import uuid4
 import logging
 import numpy as np
@@ -45,7 +45,7 @@ def print_chain(chain, output_format="svg"):
     describing the edges of the electrical network graph
     """
     assert output_format in ["svg", "graphviz"]
-    dot = Digraph()
+    dot = graphviz.Graph(graph_attr={"rankdir": "LR", "splines": "ortho"})
     vertices = _vertices(chain)
     for v, u in vertices.items():
         dot.node(str(u), str(v), shape="box")
@@ -69,9 +69,16 @@ def compute_currents(chain, src, dst, logger=None, voltage=1):
     param `src`, `dst` -- source and destination
     param `voltage` voltage difference applied to `src` and `dst`
     """
-    assert voltage!=0
+    assert voltage != 0
     vertices = _vertices(chain)
     assert src in vertices and dst in vertices
+
+    sorted_vertices = sorted([v for v in vertices])
+    sorted_vertices = {v: i for i, v in enumerate(sorted_vertices)}
+    for i, (s, d, r) in enumerate(chain):
+        if sorted_vertices[s] > sorted_vertices[d]:
+            chain[i] = (d, s, r)
+
     sorted_vertices = sorted([v for v in vertices if v != src and v != dst])
 
     A, b = [], np.zeros(len(chain)+len(sorted_vertices))
@@ -104,5 +111,5 @@ def compute_currents(chain, src, dst, logger=None, voltage=1):
     return {
         "currents": list(x[0:len(chain)]),
         "voltages": {v: u for v, u in zip(sorted_vertices, x[len(chain):])},
-        "equivalent_resistance": voltage/sum([i for i,(_,d,_) in zip(x[0:len(chain)],chain) if d==dst])
+        "equivalent_resistance": voltage/sum([i for i, (_, d, _) in zip(x[0:len(chain)], chain) if d == dst])
     }

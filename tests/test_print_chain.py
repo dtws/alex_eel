@@ -34,3 +34,5 @@ class TestPrintChain(unittest.TestCase):
 #        self.assertNotEqual(1, 2)
         svg = print_chain([("A","B",10)],output_format="svg")
         self._logger.info(svg)
+        svg = print_chain([("A","B",10)],output_format="graphviz")
+        self._logger.info(svg)
