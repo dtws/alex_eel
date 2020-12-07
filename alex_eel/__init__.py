@@ -73,13 +73,15 @@ def compute_currents(chain, src, dst, logger=None, voltage=1):
     vertices = _vertices(chain)
     assert src in vertices and dst in vertices
 
-    sorted_vertices = sorted([v for v in vertices])
-    sorted_vertices = {v: i for i, v in enumerate(sorted_vertices)}
-    for i, (s, d, r) in enumerate(chain):
-        if sorted_vertices[s] > sorted_vertices[d]:
-            chain[i] = (d, s, r)
-
     sorted_vertices = sorted([v for v in vertices if v != src and v != dst])
+    sorted_vertices_ = {
+        **{v: i+1 for i, v in enumerate(sorted_vertices)},
+        src: 0,
+        dst: len(sorted_vertices)+1
+    }
+    for i, (s, d, r) in enumerate(chain):
+        if sorted_vertices_[s] > sorted_vertices_[d]:
+            chain[i] = (d, s, r)
 
     A, b = [], np.zeros(len(chain)+len(sorted_vertices))
     # setting up equations corresponding to definition of resistance: $i_{src\to dst} \cdot r = u_{dst}-u_{src}$
