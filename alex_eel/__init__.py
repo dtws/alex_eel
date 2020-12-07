@@ -47,10 +47,15 @@ def print_chain(chain, output_format="svg"):
     assert output_format in ["svg", "graphviz"]
     dot = graphviz.Graph(graph_attr={"rankdir": "LR", "splines": "ortho"})
     vertices = _vertices(chain)
+
     for v, u in vertices.items():
-        dot.node(str(u), str(v), shape="box")
-    for s, d, r in chain:
-        dot.edge(vertices[s], vertices[d], label=str(r))
+        dot.node(str(u), str(v), shape="ellipse")
+    for i,(s,d,r) in enumerate(chain):
+        dot.node(f"r_{i}", str(r), shape="box")
+    for i,(s, d, r) in enumerate(chain):
+        dot.edge(vertices[s], f"r_{i}")
+        dot.edge(f"r_{i}", vertices[d])
+
     if output_format == "graphviz":
         return dot.source
     elif output_format == "svg":
