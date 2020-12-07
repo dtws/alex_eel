@@ -28,10 +28,12 @@ def get_install_requires(fn="requirements.txt"):
     lines = filter(lambda s: not s.startswith("#"), lines)
     return list(lines)
 
+with open("version.txt") as f:
+    version = f.read().strip()
 
 setup(
     name='alex_eel',
-    version='1.0.1',
+    version=version,
     py_modules=[],
     packages=find_packages(
         include=["alex_eel"],
